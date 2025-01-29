@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookmarkRequest;
 use App\Http\Requests\UpdateBookmarkRequest;
 use App\Models\Bookmark;
+use App\Http\Resources\V1\BookmarkResource;
+use App\Http\Resources\V1\BookmarkCollection;
 
 class BookmarkController extends Controller
 {

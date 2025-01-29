@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
-
+use App\Http\Resources\V1\BookResource;
+use App\Http\Resources\V1\BookCollection;
 class BookController extends Controller
 {
     /**
@@ -14,7 +15,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::all();
+        return new BookCollection(Book::paginate());
     }
 
     /**
@@ -38,7 +39,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return new BookResource($book);
     }
 
     /**

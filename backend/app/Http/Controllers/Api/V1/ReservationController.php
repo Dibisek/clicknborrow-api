@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Models\Reservation;
+use App\Http\Resources\V1\ReservationResource;
+use App\Http\Resources\V1\ReservationCollection;
 
 class ReservationController extends Controller
 {
@@ -14,7 +16,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
+        return new ReservationCollection(Reservation::paginate());
     }
 
     /**
@@ -38,7 +40,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        //
+        return new ReservationResource($reservation);
     }
 
     /**

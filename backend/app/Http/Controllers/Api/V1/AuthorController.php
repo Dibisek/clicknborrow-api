@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 use App\Models\Author;
+use App\Http\Resources\V1\AuthorResource;
+use App\Http\Resources\V1\AuthorCollection;
 
 class AuthorController extends Controller
 {
@@ -14,7 +16,7 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
+        return new AuthorCollection(Author::paginate());
     }
 
     /**
@@ -38,7 +40,7 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        //
+        return new AuthorResource($author);
     }
 
     /**
