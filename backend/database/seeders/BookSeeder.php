@@ -21,6 +21,7 @@ class BookSeeder extends Seeder
         Book::factory()
             ->count(3)
             ->hasReservations(2)
+            ->hasCategories(2)
             ->create();
         
     }
