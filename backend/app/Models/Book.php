@@ -14,4 +14,19 @@ class Book extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+    public function bookmarks()
+    {
+        return $this->belongsToMany(User::class, 'bookmarks');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'books_categories');
+    }
 }

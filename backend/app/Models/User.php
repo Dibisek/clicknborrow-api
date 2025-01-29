@@ -53,4 +53,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function bookmarks()
+    {
+        return $this->belongsToMany(Book::class, 'bookmarks');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->is_admin;
+    }
 }
