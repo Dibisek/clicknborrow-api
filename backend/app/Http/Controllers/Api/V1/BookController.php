@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\StoreBookmarkRequest;
-use App\Http\Requests\UpdateBookmarkRequest;
-use App\Models\Bookmark;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
+use App\Models\Book;
 
-class BookmarkController extends Controller
+class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Book::all();
     }
 
     /**
@@ -27,7 +28,7 @@ class BookmarkController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBookmarkRequest $request)
+    public function store(StoreBookRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class BookmarkController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Bookmark $bookmark)
+    public function show(Book $book)
     {
         //
     }
@@ -43,7 +44,7 @@ class BookmarkController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Bookmark $bookmark)
+    public function edit(Book $book)
     {
         //
     }
@@ -51,7 +52,7 @@ class BookmarkController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookmarkRequest $request, Bookmark $bookmark)
+    public function update(UpdateBookRequest $request, Book $book)
     {
         //
     }
@@ -59,7 +60,7 @@ class BookmarkController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Bookmark $bookmark)
+    public function destroy(Book $book)
     {
         //
     }
