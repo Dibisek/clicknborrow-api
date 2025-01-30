@@ -11,6 +11,7 @@ use App\Http\Resources\V1\ReservationCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\ReservationFilter;
 use App\Events\ReservationStatusChange;
+use Illuminate\Support\Facades\Gate;
 
 class ReservationController extends Controller
 {
@@ -19,6 +20,8 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', Reservation::class);
+
         $filter = new ReservationFilter();
         $filterItems = $filter->transform($request); // [['column', 'operator', 'value']])
 
@@ -35,18 +38,12 @@ class ReservationController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreReservationRequest $request)
     {
+        Gate::authorize('create', Reservation::class);
+
         return new ReservationResource(Reservation::create($request->all()));
     }
 
@@ -55,15 +52,9 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        return new ReservationResource($reservation);
-    }
+        Gate::authorize('view', $reservation);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Reservation $reservation)
-    {
-        //
+        return new ReservationResource($reservation);
     }
 
     /**
@@ -71,6 +62,8 @@ class ReservationController extends Controller
      */
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
+        Gate::authorize('update', $reservation);
+
         $reservation->update($request->all());
         // Check if the status has been updated, then trigger an event
         if ($request->status) {
@@ -84,6 +77,8 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
+        Gate::authorize('delete', $reservation);
+        
         $reservation->delete();
         return response()->json(['message' => 'Reservation deleted'], 204);
     }

@@ -37,7 +37,7 @@ class ReservationPolicy
      */
     public function update(User $user, Reservation $reservation): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -45,7 +45,7 @@ class ReservationPolicy
      */
     public function delete(User $user, Reservation $reservation): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
