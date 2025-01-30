@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('book_id')->constrained()->cascadeOnDelete();
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->integer('status')->default(0);
             $table->timestamps();
         });
