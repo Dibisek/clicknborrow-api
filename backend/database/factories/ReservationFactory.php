@@ -22,8 +22,8 @@ class ReservationFactory extends Factory
         return [
             'user_id' => \App\Models\User::factory(),
             'book_id' => \App\Models\Book::factory(),
-            'start_date' => $startDate,
-            'end_date' => $endDate,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
             'status' => $this->faker->numberBetween(-1, 1)
             
         ];

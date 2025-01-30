@@ -80,6 +80,7 @@ class BookController extends Controller
             return response()->json(['message' => 'Book has reservations'], 409);
         } else {
             $book->delete();
+            return response()->json(['message' => 'Book deleted'], 204);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Requests\V1;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Author;
 use App\Models\Category;
+use Illuminate\Validation\Rule;
 
 class UpdateBookRequest extends FormRequest
 {
@@ -29,7 +30,7 @@ class UpdateBookRequest extends FormRequest
             return [
                 'title' => ['required', 'string', 'max:255'],
                 'author' => ['required', 'string', 'max:255'],
-                'publicationDate' => ['nullable', 'date'],
+                'publicationDate' => ['nullable', 'date', Rule::date()->format('Y-m-d')],
                 'description' => ['required', 'string', 'max:1000'],
                 'pageCount' => ['required', 'integer'],
                 'categories' => ['required', 'array'],
@@ -39,7 +40,7 @@ class UpdateBookRequest extends FormRequest
             return [
                 'title' => ['sometimes', 'required', 'string', 'max:255'],
                 'author' => ['sometimes', 'required', 'string', 'max:255'],
-                'publicationDate' => ['sometimes', 'nullable', 'date'],
+                'publicationDate' => ['sometimes', 'nullable', 'date', Rule::date()->format('Y-m-d')],
                 'description' => ['sometimes', 'required', 'string', 'max:1000'],
                 'pageCount' => ['sometimes', 'required', 'integer'],
                 'categories' => ['sometimes', 'required', 'array'],
@@ -50,18 +51,35 @@ class UpdateBookRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $categories = collect($this->categories)->map(function ($category) {
-            if (is_numeric($category)) {
-                return Category::findOrFail($category)->id;
-            }
-            return Category::firstOrCreate(['category_name' => $category])->id;
-        })->unique()->values()->toArray();
+        if ($this->author) {
+            $this->merge([
+                'author_id' => Author::firstOrCreate(['name' => $this->author])->id,
+            ]);
+        }
 
-        $this->merge([
-            'author_id' => Author::firstOrCreate(['name' => $this->author])->id,
-            'publication_date' => $this->publicationDate ? date('Y-m-d', strtotime($this->publicationDate)) : null,
-            'page_count' => $this->pageCount,
-            'category_ids' => $categories,
-        ]);
+        if ($this->pageCount) {
+            $this->merge([
+                'page_count' => $this->pageCount,
+            ]);
+        }
+        
+        if ($this->publicationDate) {
+            $this->merge([
+                'publication_date' => $this->publicationDate,
+            ]);
+        }
+
+        if ($this->categories) {
+            $categories = collect($this->categories)->map(function ($category) {
+                if (is_numeric($category)) {
+                    return Category::findOrFail($category)->id;
+                }
+                return Category::firstOrCreate(['category_name' => $category])->id;
+            })->unique()->values()->toArray();
+
+            $this->merge([
+                'category_ids' => $categories,
+            ]);
+        }
     }
 }
