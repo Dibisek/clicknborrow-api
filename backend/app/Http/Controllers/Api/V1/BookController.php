@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBookRequest;
-use App\Http\Requests\UpdateBookRequest;
+use App\Http\Requests\V1\StoreBookRequest;
+use App\Http\Requests\V1\UpdateBookRequest;
 use App\Models\Book;
 use App\Http\Resources\V1\BookResource;
 use App\Http\Resources\V1\BookCollection;
@@ -19,26 +19,17 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $filter = new BookFilter();
-        $queryItems = $filter->transform($request); // [['column', 'operator', 'value']])
+        $filterItems = $filter->transform($request); // [['column', 'operator', 'value']])
+        
+        $includeReservations = $request->query('includeReservations');
 
-        if (count($queryItems) == 0) {
-            return new BookCollection(Book::paginate());
-        } else {
-            $books = Book::where($queryItems)->paginate();
-            return new BookCollection($books->appends($request->query()));
+        $book = Book::where($filterItems);
+
+        if ($includeReservations) {
+            $book = $book->with('reservations');
         }
 
-        Book::where($queryItems);
-
-        return new BookCollection(Book::paginate());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return new BookCollection($book->paginate()->appends($request->query()));
     }
 
     /**
@@ -46,7 +37,7 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        //
+        return new BookResource(Book::create($request->all()));
     }
 
     /**
@@ -54,15 +45,13 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return new BookResource($book);
-    }
+        $includeReservations = request()->query('includeReservations');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Book $book)
-    {
-        //
+        if ($includeReservations) {
+            return new BookResource($book->loadMissing('reservations'));
+        }
+
+        return new BookResource($book);
     }
 
     /**

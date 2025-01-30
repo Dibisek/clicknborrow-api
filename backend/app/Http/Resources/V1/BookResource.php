@@ -21,7 +21,8 @@ class BookResource extends JsonResource
             'publicationDate' => $this->publication_date,
             'description' => $this->description,
             'pageCount' => $this->page_count,
-            'categories' => $this->categories->pluck('category_name')
+            'categories' => $this->categories->pluck('category_name'),
+            'reservations' => ReservationResource::collection($this->whenLoaded('reservations')),
         ];
     }
 }
