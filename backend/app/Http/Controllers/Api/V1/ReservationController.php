@@ -10,6 +10,7 @@ use App\Http\Resources\V1\ReservationResource;
 use App\Http\Resources\V1\ReservationCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\ReservationFilter;
+use App\Events\ReservationStatusChange;
 
 class ReservationController extends Controller
 {
@@ -71,6 +72,10 @@ class ReservationController extends Controller
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
         $reservation->update($request->all());
+        // Check if the status has been updated, then trigger an event
+        if ($request->status) {
+            event(new ReservationStatusChange($reservation, $reservation->user));
+        }
         return new ReservationResource($reservation);
     }
 
