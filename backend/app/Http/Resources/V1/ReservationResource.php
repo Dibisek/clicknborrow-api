@@ -17,7 +17,7 @@ class ReservationResource extends JsonResource
         $status_names = [
             0 => 'Pending',
             1 => 'Approved',
-            -1 => 'Rejected'
+            -1 => 'Rejected',
         ];
 
         return [
@@ -26,7 +26,7 @@ class ReservationResource extends JsonResource
             'book' => $this->book->title,
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
-            'status' => $status_names[$this->status]
+            'status' => $status_names[$this->status] ?? 'Pending',
         ];
     }
 }

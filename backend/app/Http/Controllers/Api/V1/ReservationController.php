@@ -46,7 +46,7 @@ class ReservationController extends Controller
      */
     public function store(StoreReservationRequest $request)
     {
-        //
+        return new ReservationResource(Reservation::create($request->all()));
     }
 
     /**
@@ -70,7 +70,8 @@ class ReservationController extends Controller
      */
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
-        //
+        $reservation->update($request->all());
+        return new ReservationResource($reservation);
     }
 
     /**
@@ -78,6 +79,7 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        //
+        $reservation->delete();
+        return response()->json(['message' => 'Reservation deleted'], 204);
     }
 }
