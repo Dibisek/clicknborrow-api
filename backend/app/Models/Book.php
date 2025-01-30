@@ -10,6 +10,15 @@ class Book extends Model
     /** @use HasFactory<\Database\Factories\BookFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'author_id',
+        'publication_date',
+        'description',
+        'page_count',
+    ];
+        
+
     public function reservations()
     {
         return $this->hasMany(Reservation::class);

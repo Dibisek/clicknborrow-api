@@ -37,7 +37,10 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        return new BookResource(Book::create($request->all()));
+        $book = Book::create($request->except('category_ids'));
+        $book->categories()->attach($request->category_ids);
+        
+        return new BookResource($book);
     }
 
     /**
@@ -59,7 +62,12 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book)
     {
-        //
+        $book->update($request->except('category_ids'));
+        if ($request->category_ids) {
+        $book->categories()->sync($request->category_ids);
+        }
+
+        return new BookResource($book);
     }
 
     /**
@@ -67,6 +75,11 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->categories()->detach();
+        if ($book->reservations()->count() > 0 || $book->reservations()->count() > 0) {
+            return response()->json(['message' => 'Book has reservations'], 409);
+        } else {
+            $book->delete();
+        }
     }
 }
