@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreReservationRequest;
-use App\Http\Requests\UpdateReservationRequest;
+use App\Http\Requests\V1\StoreReservationRequest;
+use App\Http\Requests\V1\UpdateReservationRequest;
 use App\Models\Reservation;
 use App\Http\Resources\V1\ReservationResource;
 use App\Http\Resources\V1\ReservationCollection;

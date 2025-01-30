@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBookmarkRequest;
-use App\Http\Requests\UpdateBookmarkRequest;
+use App\Http\Requests\V1\StoreBookmarkRequest;
+use App\Http\Requests\V1\UpdateBookmarkRequest;
 use App\Models\Bookmark;
 use App\Http\Resources\V1\BookmarkResource;
 use App\Http\Resources\V1\BookmarkCollection;
