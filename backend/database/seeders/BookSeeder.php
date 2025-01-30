@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Book;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Category;
 
 class BookSeeder extends Seeder
 {
@@ -15,13 +16,20 @@ class BookSeeder extends Seeder
     {
         Book::factory()
             ->count(5)
+            ->hasCategories(3)
             ->hasReservations(1)
             ->create();
 
         Book::factory()
-            ->count(3)
+            ->count(2)
             ->hasReservations(2)
-            ->hasCategories(2)
+            ->hasAttached('categories', ['category_id' => Category::all()->random()->id])
+            ->create();
+
+        Book::factory()
+            ->count(2)
+            ->hasReservations(2)
+            ->hasAttached('categories', ['category_id' => Category::all()->random()->id])
             ->create();
         
     }

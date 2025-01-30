@@ -8,13 +8,28 @@ use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Http\Resources\V1\BookResource;
 use App\Http\Resources\V1\BookCollection;
+use Illuminate\Http\Request;
+use App\Filters\V1\BookFilter;
+
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filter = new BookFilter();
+        $queryItems = $filter->transform($request); // [['column', 'operator', 'value']])
+
+        if (count($queryItems) == 0) {
+            return new BookCollection(Book::paginate());
+        } else {
+            $books = Book::where($queryItems)->paginate();
+            return new BookCollection($books->appends($request->query()));
+        }
+
+        Book::where($queryItems);
+
         return new BookCollection(Book::paginate());
     }
 

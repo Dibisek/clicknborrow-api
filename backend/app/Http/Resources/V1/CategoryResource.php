@@ -14,17 +14,10 @@ class CategoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $book_list = $this->books->map(function ($book) {
-            return [
-                'id' => $book->id,
-                'title' => $book->title,
-                'author' => $book->author->name,
-            ];
-        });
         return [
             'id' => $this->id,
             'categoryName' => $this->category_name,
-            'bookList' => $book_list,
+            'books' => BookResource::collection($this->whenLoaded('books')),
         ];
     }
 }
