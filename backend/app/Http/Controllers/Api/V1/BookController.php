@@ -90,9 +90,8 @@ class BookController extends Controller
         $book->categories()->detach();
         if ($book->reservations()->count() > 0 || $book->reservations()->count() > 0) {
             return response()->json(['message' => 'Book has reservations'], 409);
-        } else {
-            $book->delete();
-            return response()->json(['message' => 'Book deleted'], 204);
-        }
+        } 
+        $book->delete();
+        return response()->json(['message' => 'Book deleted'], 204);
     }
 }
