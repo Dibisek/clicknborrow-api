@@ -1,86 +1,272 @@
-/* color palette from <https://github.com/vuejs/theme> */
-:root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
-
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
-
-  --vt-c-indigo: #2c3e50;
-
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-}
-
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
-
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-
-  --section-gap: 160px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
-}
+@import url('https://fonts.googleapis.com/css2?family=KoHo:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 body {
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(180deg, #445495 0%, #0A102A 80%);
+  color: #F9E1BB;
+}
+
+h1 { 
+  font-size: 2.5rem;
+  font-family: KoHo;
+  font-style: italic;
+  font-weight: 600;
+  word-wrap: break-word;
+}
+
+.flex-row-center-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+/* LOGIN SECTION */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 50vw;
+
+}
+
+.login-logo {
+  size: 75vh;
+}
+
+form > input {
+  padding: 0 0.5em;
+
+  height: 2.5em;
+  width: 250px;
+  color: #3F2722;
+  font-size: 16px;
+  font-family: KoHo;
+  font-weight: 600;
+  word-wrap: break-word;
+
+  background: #F9E1BB; 
+  border-radius: 15px; 
+}
+
+.btn-gradient {
+  background: linear-gradient(#F9E1BB, #F9E1BB) padding-box,
+              radial-gradient(100% 80% at 50% -20px, #C38D77, #53332C) border-box;
+  border-radius: 15px;
+  border: 4px solid transparent;
+}
+
+form > button {
+  transition: background 1s ease;
+  width: 100%;
+  box-shadow: 0px -8px 2.5px rgba(0, 0, 0, 0.25) inset;
+  border-radius: 15px;
+  border: 4px solid transparent;
+  background: radial-gradient(50% 50% at 50% 0%, #9e524a, #3f2722) padding-box,
+              radial-gradient(100% 80% at 50% -20px, #C38D77, #53332C) border-box;
+  
+  box-sizing: border-box;
+  height: 50px;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: KoHo;
+  color: #f9e1bb;
+  text-align: center;
+  display: inline-block;
+
+  margin-top: 1em;
+}
+
+form > button:hover {
+  
+  background: radial-gradient(50% 50% at 50% 0%, #C38D77, #53332C) padding-box,
+              radial-gradient(100% 80% at 50% -20px, #C38D77, #53332C) border-box;
+}
+
+.sign-up-btn {
+  font-weight: 600;
+  font-family: KoHo;
+  color: #f47365;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.error-message {
+  color: #f54d38;
+  font-size: 1em;
+  font-family: KoHo;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+}
+
+
+.base-container {
+  display: flex;
+  /* align-items: center; */
+  justify-content: flex-start;
+  background: linear-gradient(180deg, #445495 0%, #0A102A 80%);
+  color: #F9E1BB;
+  width: 100vw;
+}
+
+main {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  padding: 0 6vw 0 13vw;
+  margin: 0;
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
-  line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
-  font-size: 15px;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+
+.error-page a {
+  display: block;
+  width: fit-content;
+  font-family: KoHo;
+  text-decoration: none;
+  font-size: 2em;
+  color: #9e524a;
+  font-weight: 600;
+  padding: 0.25em 0.5em;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 3vw;
+  height: 100vh;
+  background: radial-gradient(50% 50% at 50% 25%, #9e524a, #3f2722);
+}
+
+nav > a:first-child img {
+  display: block;
+  margin: 0.5em auto;
+  width: 95%;
+}
+
+nav > ul a {
+  transition:  background-color 0.25s, color 0.25s;
+  text-decoration: none;
+  display: inline-block;
+  width: 100%;
+  line-height: 4em;
+}
+
+nav ul {
+  width: 100%;
+}
+
+li i {
+  font-size: 1.5em;
+  text-align: center;
+  color: #F9E1BB;
+  width: 100%;
+}
+
+nav > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav > ul a:hover {
+  transition: background-color 0.25s;
+  background-color: #9E524ABF;
+}
+
+.search-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box > button {
+  margin: 0 0.5em;
+  width: 15%;
+}
+
+.search-box > input {
+  width: 95%;
+  
+}
+
+.search-box label {
+  font-family: KoHo;
+  font-size: 1.3em;
+  color: #F9E1BB;
+  margin: 0.5em 1em;
+}
+
+.paginationWrapper{
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px 10px;
+}
+
+.pageButton{
+  background-color: #3F2722;
+  transition: none;
+}
+
+.pageButton.active{
+  background-color: #9e524a;
+}
+
+.bookmark-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .container {
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+  }
+
+  .login-logo {
+      width: 75%;
+  }
+
+  nav img {
+      display: none !important;
+  }
+  nav {
+      display: flex;
+      flex-direction: row;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      top: revert;
+      width: 100vw;
+      height: 3.5em;
+  }
+
+  nav ul {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      width: 100%;
+  }
+
 }
