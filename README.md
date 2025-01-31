@@ -97,17 +97,22 @@ The project includes a comprehensive design and structure for the database, ensu
    ./vendor/bin/sail up -d
     ```
 
-5. **Go to frontend directory:**
+5. **Migrate the database and seed it with sample data:**
+   ```bash
+   ./vendor/bin/sail artisan migrate --seed
+   ```
+
+6. **Go to frontend directory:**
    ```bash
    cd ../frontend
    ```
 
-6. **Install the dependencies:**
+7. **Install the dependencies:**
    ```bash
     npm install
     ```
 
-7. **Start the development server:**
+8. **Start the development server:**
    ```bash
     npm run dev
     ```
