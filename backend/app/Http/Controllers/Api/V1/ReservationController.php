@@ -20,7 +20,7 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-        Gate::authorize('viewAny', Reservation::class);
+        // Gate::authorize('viewAny', Reservation::class);
 
         $filter = new ReservationFilter();
         $filterItems = $filter->transform($request); // [['column', 'operator', 'value']])
@@ -52,7 +52,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        Gate::authorize('view', $reservation);
+        // Gate::authorize('view', $reservation);
 
         return new ReservationResource($reservation);
     }
