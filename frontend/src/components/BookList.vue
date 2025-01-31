@@ -3,7 +3,8 @@
     <section class="books-container">
       <div v-for="book in books" :key="book.id" :id="'project-' + book.id">
         <div class="top-box">
-          <!-- <img :src="getBookImageUrl(book.photo)" :alt="book.title"> -->
+          <img :src="getBookImageUrl(book.photo)" alt="Book Cover">
+          
           <p class="description">{{ book.description }}</p>
         </div>
         <h2 class="book-title koho-title">{{ book.title }}</h2>
@@ -34,6 +35,9 @@
   <script>
   import { ref, onMounted } from 'vue'
   import { useStore } from 'vuex'
+
+  // As dummy image use the image from the assets/img folder
+  // import bookImage from '@/assets/img/previmg.jpeg
   
   export default {
     name: 'BookList',

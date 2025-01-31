@@ -19,7 +19,7 @@ class BookController extends Controller
      */
     public function index(Request $request)
     {
-        Gate::authorize('viewAny', Book::class);
+        // Gate::authorize('viewAny', Book::class);
 
         $filter = new BookFilter();
         $filterItems = $filter->transform($request); // [['column', 'operator', 'value']])
@@ -54,7 +54,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        Gate::authorize('view', $book);
+        // Gate::authorize('view', $book);
 
         $includeReservations = request()->query('includeReservations');
 
