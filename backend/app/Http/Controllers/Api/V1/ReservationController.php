@@ -42,7 +42,7 @@ class ReservationController extends Controller
      */
     public function store(StoreReservationRequest $request)
     {
-        Gate::authorize('create', Reservation::class);
+        // Gate::authorize('create', Reservation::class);
 
         return new ReservationResource(Reservation::create($request->all()));
     }

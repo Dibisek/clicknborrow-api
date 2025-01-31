@@ -1,0 +1,852 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Click'n Borrow API",
+        "version": "1.0.0",
+        "description": "OpenAPI (Swagger) documentation for the 'Click'n Borrow' system. This API is used to manage book library and reservation system."
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1/api/v1",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": ["Authentication"],
+                "summary": "Register a new user",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/RegisterRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": { "type": "string" },
+                                        "user": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": { "type": "number" },
+                                                "name": { "type": "string" },
+                                                "email": { "type": "string", "format": "email" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "A user with this email already exists"
+                    },
+                    "422": {
+                        "description": "Validation error (e.g., invalid request data)"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": ["Authentication"],
+                "summary": "User login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/LoginRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns an access token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "description": "Bearer token to use in the `Authorization: Bearer <token>` header"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error or incorrect login credentials"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": ["Authentication"],
+                "summary": "Logout (invalidate token)",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized (no valid token provided)"
+                    }
+                }
+            }
+        },
+        "/books": {
+            "get": {
+                "tags": ["Books"],
+                "summary": "List all books",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Filter by title",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "author",
+                        "in": "query",
+                        "description": "Filter by author name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "publicationDate",
+                        "in": "query",
+                        "description": "Filter by publication date",
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "pageCount",
+                        "in": "query",
+                        "description": "Filter by page count",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "categories",
+                        "in": "query",
+                        "description": "Filter by categories",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized to view books (authorization policy)."
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Books"],
+                "summary": "Create a new book",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/StoreBookRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "The book has been created",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/BookAdd" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/books/{book}": {
+            "get": {
+                "tags": ["Books"],
+                "summary": "Get a single book",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the book",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Book data (matched with BookResource)",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/book" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized to view this book (authorization policy)"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Books"],
+                "summary": "Update an existing book",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the book to update",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/UpdateBookRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated book data (matched with BookResource)",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/BookAdd" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Books"],
+                "summary": "Delete an existing book",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the book to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Book was deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            }
+        },
+        "/reservations": {
+            "get": {
+                "tags": ["Reservations"],
+                "summary": "List all reservations",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "query",
+                        "required": true,
+                        "description": "Filter by user ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "book",
+                        "in": "query",
+                        "required": true,
+                        "description": "Filter by book ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": true,
+                        "description": "Filter by start date",
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": true,
+                        "description": "Filter by end date",
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [-1, 0, 1]
+                        }
+                    }
+                            
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of reservations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/Reservation" }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized to view reservations (authorization policy)"
+                    },
+                    "404": {
+                        "description": "Reservation not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Reservations"],
+                "summary": "Add a reservation",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/StoreReservationRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Reservation has been created",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Reservation" }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Resrvation not found"
+                    }
+                }
+            }
+        },
+        "/reservation/{reservation}": {
+            "get": {
+                "tags": ["Reservations"],
+                "summary": "Get a single reservation",
+                "parameters": [
+                    {
+                        "name": "reservation",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the reservation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reservation data",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Reservation" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Reservation not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Reservations"],
+                "summary": "Update an existing reservation",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "reservation",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the reservation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/UpdateReservationRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated reservation data",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Reservation" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Reservation not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Reservations"],
+                "summary": "Delete an existing reservation",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "reservation",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the reservation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Reservation has been deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Reservation not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "RegisterRequest": {
+                "type": "object",
+                "required": ["firstname", "lastname", "email", "password", "password_confirmation"],
+                "properties": {
+                    "firstname": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "lastname": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "phoneNb": {
+                        "type": "string",
+                        "maxLength": 16
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                }
+            },
+            "StoreBookRequest": {
+                "type": "object",
+                "required": ["id", "title", "author", "publicationDate", "description", "pageCount", "categories"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the book"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Book title"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "Author name"
+                    },
+                    "publicationDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Publication date"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant description"
+                    },
+                    "pageCount": {
+                        "type": "number",
+                        "description": "Number of pages"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of categories"
+                    }
+                }
+            },
+            "UpdateBookRequest": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the book"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Book title"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "Author name"
+                    },
+                    "publicationDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Publication date"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant description"
+                    },
+                    "pageCount": {
+                        "type": "number",
+                        "description": "Number of pages"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of categories"
+                    }
+                }
+            },
+            "StoreReservationRequest": {
+                "type": "object",
+                "required": ["id", "user", "book", "startDate", "endDate", "status"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the reservation"
+                    },
+                    "user": {
+                        "type": "string",
+                        "description": "The full name of user who made the reservation"
+                    },
+                    "book": {
+                        "type": "string",
+                        "description": "The title of the book"
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Start date of the reservation"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "End date of the reservation"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Pending", "Approved", "Rejected"],
+                        "description": "Status of the reservation"
+                    }
+                }
+            },
+            "UpdateReservationRequest": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the reservation"
+                    },
+                    "user": {
+                        "type": "string",
+                        "description": "The full name of user who made the reservation"
+                    },
+                    "book": {
+                        "type": "string",
+                        "description": "The title of the book"
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Start date of the reservation"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "End date of the reservation"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Pending", "Approved", "Rejected"],
+                        "description": "Status of the reservation"
+                    }
+                }
+            },
+            "book": {
+                "type": "object",
+                "required": ["id", "title", "author", "publicationDate", "description", "pageCount", "categories"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the book"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Book title"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "Author name"
+                    },
+                    "publicationDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Publication date"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant description"
+                    },
+                    "pageCount": {
+                        "type": "number",
+                        "description": "Number of pages"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of categories"
+                    }
+                }
+            },
+            "BookAdd": {
+                "type": "object",
+                "required": ["id", "title", "author", "publicationDate", "description", "pageCount", "categories"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the book"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Book title"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "Author name"
+                    },
+                    "publicationDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Publication date"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant description"
+                    },
+                    "pageCount": {
+                        "type": "number",
+                        "description": "Number of pages"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of categories"
+                    }
+                }
+            },
+            "Reservation": {
+                "type": "object",
+                "required": ["id", "user", "book", "startDate", "endDate", "status"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the reservation"
+                    },
+                    "user": {
+                        "type": "string",
+                        "description": "The full name of user who made the reservation"
+                    },
+                    "book": {
+                        "type": "string",
+                        "description": "The title of the book"
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Start date of the reservation"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "End date of the reservation"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Pending", "Approved", "Rejected"],
+                        "description": "Status of the reservation"
+                    }
+                }
+            }
+        }
+    }
+}
