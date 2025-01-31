@@ -46,4 +46,37 @@ class AuthController extends Controller
             'message' => 'Successfully logged out'
         ]);
     }
+
+    public function register(Request $request)
+    {
+        $request->merge([
+            'password_confirmation' => $request->passwordConfirmation ?? null,
+        ]);
+
+        $request->validate([
+            'firstName' => 'required|string|max:50',
+            'lastName' => 'required|string|max:50',
+            'phoneNb' => 'nullable|string|max:17',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed'
+        ]);
+
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'message' => 'A user with this email already exists'
+            ], 409);
+        }
+        $user = User::create([
+            'firstname' => $request->firstName,
+            'lastname' => $request->lastName,
+            'phone_nb' => $request->phoneNb ?? null,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        
+        return response()->json([
+            'message' => 'User registered successfully',
+            'user' => $user->only(['id', 'name', 'email']),
+        ], 201);
+    }
 }
