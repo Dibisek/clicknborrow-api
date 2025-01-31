@@ -4,7 +4,6 @@ Click'n Borrow is a web implementation of a reservation system in a library. It 
 
 The new version of project uses Laravel for backend API and Vue.js for frontend. We've chosen Laravel because it is a powerful and flexible PHP framework that provides a wide range of features for building web applications. Additionally, unique features such as Eloquent ORM, middleware, and routing make it easy to build RESTful APIs. Vue.js is a popular JavaScript framework that allows developers to build interactive and dynamic user interfaces. It is lightweight, fast, and easy to integrate with other libraries and projects. Together, Laravel and Vue.js provide a powerful and efficient solution for building modern web applications.
 
-The project
 
 
 # Table of Contents
@@ -12,12 +11,10 @@ The project
 1. [Features](#features)
 2. [Technology Stack](#technology-stack)
 3. [Database Design and Structure](#database-design-and-structure)
-4. [UML Diagrams](#uml-diagrams)
-5. [Design Patterns](#design-patterns)
-6. [Installation](#installation)
-7. [Screens](#screens)
-8. [Tests](#tests)
-9. [License](#license)
+4. [Installation](#installation)
+5. [API Endpoints Overview](#api-endpoints-overview)
+6. [Screens](#screens)
+7. [License](#license)
 
 
 ## Features
