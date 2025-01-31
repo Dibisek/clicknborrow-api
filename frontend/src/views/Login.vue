@@ -36,6 +36,8 @@
   <script>
   import { ref, reactive } from 'vue'
   import { useRouter } from 'vue-router'
+  // Add environment variables
+  const apiUrl = import.meta.env.VITE_API_URL
   
   export default {
     name: 'LoginView',
@@ -74,7 +76,7 @@
   
         try {
           isLoading.value = true
-          const response = await fetch('http://your-api-url/api/login', {
+          const response = await fetch(apiUrl + '/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
